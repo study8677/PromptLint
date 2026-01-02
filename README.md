@@ -4,6 +4,7 @@
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![](https://img.shields.io/badge/docs-中文-red.svg)](README_zh.md)
 
 **PromptLint** helps you engineer prompts that are not just "good enough" for one model, but **robust** across many. It evaluates consistency, stability, and format adherence, ensuring your prompts transfer well between models and don't break under sampling variations.
 
