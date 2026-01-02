@@ -1,0 +1,24 @@
+[project]
+name = "promptlint"
+version = "0.1.0"
+description = "Prompt robustness evaluation across model ladders"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "httpx>=0.27.0",
+  "pyyaml>=6.0",
+  "tenacity>=8.2.3",
+  "tqdm>=4.66.1",
+]
+license = { text = "MIT" }
+
+[project.scripts]
+promptlint = "promptlint.cli.main:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["promptlint*"]

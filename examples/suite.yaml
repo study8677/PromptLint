@@ -1,0 +1,95 @@
+name: "basic-robustness"
+
+providers:
+  - name: "openai"
+    kind: "openai_compatible"
+    api_base: "https://api.openai.com/v1"
+    api_key_env: "OPENAI_API_KEY"
+    timeout_s: 60
+    max_retries: 4
+    price_per_1k_prompt: 0.0
+    price_per_1k_completion: 0.0
+    metadata:
+      note: "Set pricing to enable cost estimation"
+  - name: "together"
+    kind: "openai_compatible"
+    api_base: "https://api.together.xyz/v1"
+    api_key_env: "TOGETHER_API_KEY"
+    timeout_s: 60
+    max_retries: 4
+  - name: "local"
+    kind: "openai_compatible"
+    api_base: "http://localhost:8000/v1"
+    api_key_env: "LOCAL_API_KEY"
+    timeout_s: 30
+    max_retries: 2
+    metadata:
+      note: "Local OpenAI-compatible server"
+
+run:
+  concurrency: 8
+  cache_path: ".promptlint/cache.sqlite"
+  use_cache: true
+  embeddings:
+    provider: "openai"
+    model: "text-embedding-3-small"
+    batch_size: 16
+
+ladder:
+  name: "default"
+  models:
+    - provider: "openai"
+      name: "gpt-5"
+      tier: 5
+      context_window: 128000
+    - provider: "together"
+      name: "llama-70b"
+      tier: 4
+    - provider: "together"
+      name: "llama-13b"
+      tier: 3
+    - provider: "local"
+      name: "llama-7b"
+      tier: 2
+    - provider: "local"
+      name: "tiny-3b"
+      tier: 1
+
+sampling:
+  - temperature: 0.0
+    top_p: 1.0
+    max_tokens: 256
+  - temperature: 0.7
+    top_p: 1.0
+    max_tokens: 256
+
+prompts:
+  - id: "summarize-bullets"
+    text: |
+      You are a concise technical editor.
+      Summarize the following text in 4 bullet points.
+      Each bullet must start with a verb.
+
+      Text:
+      """
+      Replace this with your content.
+      """
+    constraints:
+      - name: "format-bullets"
+        description: "Output exactly 4 bullets and start each with a verb."
+        kind: "format"
+        weight: 1.0
+        rules:
+          type: "count"
+          pattern: "^\\s*[-*]\\s+"
+          exact: 4
+      - name: "no-extra-text"
+        description: "No intro or outro sentences."
+        kind: "structure"
+        weight: 0.5
+        rules:
+          type: "all_lines_match"
+          pattern: "^\\s*[-*]\\s+"
+    metadata:
+      domain: "summarization"
+      expected_format: "bullets"
