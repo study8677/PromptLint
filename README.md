@@ -16,6 +16,16 @@
 - **🛡 Constraint Guards**: Automatically enforce JSON schemas, bullet counts, regex patterns, and more.
 - **⚡️ Async & Cached**: built for speed. Run massive suites concurrently with automatic caching to save API costs.
 
+## 🪜 The Model Ladder Philosophy
+
+Constraints of production systems often force us to use smaller, faster models (e.g., Llama-3-8B, GPT-3.5) rather than the smartest available models (e.g., GPT-4o, Claude 3.5 Sonnet).
+
+**PromptLint** formalizes this by testing a "ladder" of models:
+1.  **Tier 1 (Oracle)**: The smartest model available. We assume its output is the "ground truth" or ideal response.
+2.  **Tier 2+ (Candidates)**: Smaller, cheaper models that we want to deploy.
+
+We measure **Consistency** by checking if Tier 2+ models deviate from Tier 1. If a small model matches the large model's intent (high semantic similarity) and structure, it is safe to deploy.
+
 ---
 
 ## 🛠 How it Works
